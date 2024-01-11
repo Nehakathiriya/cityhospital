@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useDispatch, useSelector } from "react-redux";
+import { decreaseQuantity, increaseQuantity, removerCartData } from "../../redux/slice/addToCart.slice";
 
 
-function AddToCart({ cart, setCart }) {
-   console.log(cart);
+function AddToCart() {
+   
   const [data, setData] = useState([]);
   const [totalprice, setTotalprice] = useState(0);
+
+
+  const dispatch = useDispatch();
+
+  const medicines = useSelector(state => state.medicines);
+  console.log(medicines.medicines);
+
+  const cart = useSelector(state => state.cart);
+  console.log(cart);
 
   useEffect(() => {
     getData();
@@ -20,8 +31,8 @@ function AddToCart({ cart, setCart }) {
     setData(apiData)
   }
 
-  let cartData = cart.map((v) => {
-    let med = data.find((d) => d.id === v.id);
+  let cartData = cart.cart.map((v) => {
+    let med = medicines.medicines.find((d) => d.id === v.id);
     return { ...med, ...v }
 
   })
@@ -31,75 +42,50 @@ function AddToCart({ cart, setCart }) {
   let totalPrice = cartData.reduce((total, v) => total + v.price * v.quantity, 0);
   console.log(totalPrice);
 
-  // let tPrice = cartData.map((v) =>{
-
-  //  return totalprice + v.price * v.quantity; 
-
-
-  // })
-  // console.log(tPrice);
-
-
-  // const addItemprice = (v) => {
-  //   setData([...cartData, v]);
-  //   setTotalprice([totalprice + v.price]);
-  //   console.log(totalprice);
-
-  // } 
-
-
-
-
-  //   const handleCart = (event,id) => {
-  //     event.preventDefault();
-  //     const data = cart.find((v) => v.id === id);
-
-  //     if(data){
-  //       let cartData = [...cart];
-  //       let index = cartData.findIndex((v) => v.id === id);
-  //       cartData[index].quantity++;
-  //       setCart(cartData)
-  //     }else{
-  //       setCart((prev) => [...prev,{id:id,quantity:1}])
-  //     }
-  // }
 
   const handleDec = (id) => {
-    const addData = cart.map((v) => v.id === id);
+    dispatch(decreaseQuantity(id))
+
+   
+    
+    // const addData = cart.map((v) => v.id === id);
     // console.log(addData);
 
-    if (addData) {
-      let cartData = [...cart];
-      let index = cartData.findIndex((v) => v.id === id);
-      cartData[index].quantity--;
-      setCart(cartData)
+    // if (addData) {
+    //   let cartData = [...cart];
+    //   let index = cartData.findIndex((v) => v.id === id);
+    //   cartData[index].quantity--;
+    //   setCart(cartData)
 
-    } else {
-      setCart((prev, v) => [...prev, { quantity: v.quantity }])
-    }
+    // } else {
+    //   setCart((prev, v) => [...prev, { quantity: v.quantity }])
+    // }
 
 
   }
 
   const handleInc = (id) => {
+    dispatch(increaseQuantity(id))
+   
 
-    const addData = cart.map((v) => v.id === id);
-    console.log(addData);
+    // const addData = cart.map((v) => v.id === id);
+    // console.log(addData);
 
-    if (addData) {
-      let cartData = [...cart];
-      let index = cartData.findIndex((v) => v.id === id);
-      cartData[index].quantity++;
-      setCart(cartData)
+    // if (addData) {
+    //   let cartData = [...cart];
+    //   let index = cartData.findIndex((v) => v.id === id);
+    //   cartData[index].quantity++;
+    //   setCart(cartData)
 
-    } else {
-      setCart((prev, v) => [...prev, { quantity: v.quantity }])
-    }
+    // } else {
+    //   setCart((prev, v) => [...prev, { quantity: v.quantity }])
+    // }
   }
 
   const handleRemove = (id) => {
-    let updatedCart = cart.filter((v) => v.id !== id);
-    setCart(updatedCart);
+    dispatch(removerCartData(id))
+    // let updatedCart = cart.filter((v) => v.id !== id);
+    // setCart(updatedCart);
   };
 
   // let cartData = data.filter((f) => cart.find((v) => v === f.id))

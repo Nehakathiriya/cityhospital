@@ -3,9 +3,13 @@ import { NavLink } from "react-router-dom";
 import Badge from '@mui/material/Badge';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { useSelector } from "react-redux";
 
-function Header({ favorites, cart }) {
-  let cartCount = cart.reduce((acc, v) => acc + v.quantity, 0);
+function Header({ favorites }) {
+  const cart = useSelector(state => state.cart);
+  console.log(cart);
+
+  let cartCount = cart.cart.reduce((acc, v) => acc + v.quantity, 0);
   return (
     <div className="main-header">
       <header id="header" className="fixed-top">

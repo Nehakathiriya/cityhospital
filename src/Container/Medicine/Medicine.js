@@ -3,8 +3,9 @@ import { Container, Card, CardBody, CardTitle, CardSubtitle, CardText, Button } 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getMedicine, getMedicines } from "../../redux/action/medicine.action";
+import { handleDataCart } from "../../redux/slice/addToCart.slice";
 
-function Medicine({cart, setCart}) {
+function Medicine() {
     const [data, setData] = useState([]);
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState("");
@@ -13,6 +14,10 @@ function Medicine({cart, setCart}) {
 
     const medicines = useSelector(state => state.medicines);
     console.log(medicines.medicines);
+
+    const cart = useSelector(state => state.cart);
+    console.log(cart);
+    
 
     useEffect(() => {
         dispatch(getMedicines());
@@ -29,18 +34,21 @@ const getData = async () => {
 
 const handleCart = (event,id) => {
     event.preventDefault();
-    const data = cart.find((v) => v.id === id);
+    dispatch(handleDataCart(id));
+  
 
-    if(data){
-      let cartData = [...cart];
-      let index = cartData.findIndex((v) => v.id === id);
-      cartData[index].quantity++;
-      setCart(cartData)
-    }else{
-      setCart((prev) => [...prev,{id:id,quantity:1}])
-    }
+    // const data = cart.find((v) => v.id === id);
+
+    // if(data){
+    //   let cartData = [...cart];
+    //   let index = cartData.findIndex((v) => v.id === id);
+    //   cartData[index].quantity++;
+    //   setCart(cartData)
+    // }else{
+    //   setCart((prev) => [...prev,{id:id,quantity:1}])
+    // }
 }
- console.log(cart);
+
     
 const handleSearchSort = () => {
         let fData = data.filter(
@@ -105,7 +113,7 @@ const handleSearchSort = () => {
                                         {v.expiry}
                                     </CardText>
 
-                                    <Button onClick={(event) => handleCart(event, v.id)} className='add-to-cart'>
+                                    <Button onClick={(event) => handleCart(event ,v.id)} className='add-to-cart'>
                                         Add to cart
                                     </Button>
                                 </CardBody>
